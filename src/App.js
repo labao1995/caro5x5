@@ -11,12 +11,14 @@ function App() {
 
     const players = ['X', 'O'];
     const handleXO = (box) => {
-        const newBoard = [...board];
-        if (isWinner || newBoard[box]) return;
-        newBoard[box] = player;
-        setBoard(newBoard);
-        setIsWinner(winConditions(newBoard));
-        setComputerTurn(true);
+        if (!computerTurn) {
+            const newBoard = [...board];
+            if (isWinner || newBoard[box]) return;
+            newBoard[box] = player;
+            setBoard(newBoard);
+            setIsWinner(winConditions(newBoard));
+            setComputerTurn(true);
+        }
     };
 
     const handleReset = () => {
@@ -69,6 +71,10 @@ function App() {
             return item;
         });
         setEmptyBoard(newBoard);
+        if (board.every((item) => item !== null) && !isWinner) {
+            alert('Draw');
+            handleReset();
+        }
     }, [board]);
 
     useEffect(() => {
@@ -92,7 +98,7 @@ function App() {
             }, delayComputer);
         }
         return () => {
-            clearTimeout(computerTurn);
+            clearTimeout(computerPlay);
         };
     }, [emptyBoard, player, isWinner]);
 
