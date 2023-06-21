@@ -75,8 +75,11 @@ function App() {
         const delayComputer = 800;
         const computerPlayer = player === 'X' ? 'O' : 'X';
         const computer = () => {
-            const random = Math.floor(Math.random() * emptyBoard.length);
+            let random = Math.floor(Math.random() * emptyBoard.length);
             const newBoard = [...board];
+            while (newBoard[emptyBoard[random]] !== null) {
+                random = Math.floor(Math.random() * emptyBoard.length);
+            }
             newBoard[emptyBoard[random]] = computerPlayer;
             setBoard(newBoard);
             setIsWinner(winConditions(newBoard));
@@ -88,7 +91,9 @@ function App() {
                 computer();
             }, delayComputer);
         }
-        return () => clearTimeout(computerTurn);
+        return () => {
+            clearTimeout(computerTurn);
+        };
     }, [emptyBoard, player, isWinner]);
 
     return (
